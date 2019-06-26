@@ -78,8 +78,7 @@ class NSCustomizableButton: NSButton, NSMouseHoverableView {
         self.hasRoundedLeadingImage = hasRoundedLeadingImage
     }
     
-    override class func cellClass() -> AnyClass? {
-        return ButtonCell.self
-    }
+    @objc override class var cellClass: AnyClass? {get {return ButtonCell.self} set{}}
+    
     
 }

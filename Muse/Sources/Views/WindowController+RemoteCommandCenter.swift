@@ -9,7 +9,6 @@
 import Foundation
 import MediaPlayer
 
-@available(OSX 10.12.2, *)
 extension WindowController {
     
     // MARK: TouchBar main playback controls
@@ -19,7 +18,7 @@ extension WindowController {
     /**
      Handles system play requests and the start of scrub event
      */
-    func handlePlay(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handlePlay(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.play()
         
         nowPlayingInfoCenter.playbackState = .playing
@@ -30,7 +29,7 @@ extension WindowController {
     /**
      Handles system pause requests and the end of scrub event
      */
-    func handlePause(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handlePause(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.pause()
         
         nowPlayingInfoCenter.playbackState = .paused
@@ -41,7 +40,7 @@ extension WindowController {
     /**
      Handles system play/pause toggle requests
      */
-    func handleTogglePlayPause(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleTogglePlayPause(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.togglePlayPause()
         
         updatePlaybackState()
@@ -54,7 +53,7 @@ extension WindowController {
     /**
      Handles system scrubbing requests
      */
-    func handleChangePlaybackPosition(event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleChangePlaybackPosition(event: MPChangePlaybackPositionCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.scrub(to: event.positionTime.rounded() / self.song.duration, touching: false)
         
         return .success
@@ -63,7 +62,7 @@ extension WindowController {
     /**
      Handles system previous track requests
      */
-    func handlePreviousTrack(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handlePreviousTrack(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.previousTrack()
         
         return .success
@@ -72,7 +71,7 @@ extension WindowController {
     /**
      Handles system next track requests
      */
-    func handleNextTrack(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleNextTrack(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         helper.nextTrack()
         
         return .success

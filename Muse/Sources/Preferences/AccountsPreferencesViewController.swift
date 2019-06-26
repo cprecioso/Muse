@@ -11,7 +11,7 @@ import MASPreferences
 
 class AccountsPreferencesViewController: NSViewController, MASPreferencesViewController {
 
-    override var nibName: String? {
+    override var nibName: NSNib.Name? {
         return "AccountsPreferencesView"
     }
     
@@ -29,7 +29,7 @@ class AccountsPreferencesViewController: NSViewController, MASPreferencesViewCon
     
     var toolbarItemLabel: String? = "Accounts"
     
-    var toolbarItemImage: NSImage? = NSImage(named: NSImageNameUserAccounts)
+    var toolbarItemImage: NSImage? = NSImage(named: NSImage.userAccountsName)
     
     // MARK: Account preferences
     

@@ -10,18 +10,17 @@ import Cocoa
 import Carbon.HIToolbox
 import MediaPlayer
 
-fileprivate extension NSTouchBarItemIdentifier {
-    static let controlStripButton = NSTouchBarItemIdentifier(
+fileprivate extension NSTouchBarItem.Identifier {
+    static let controlStripButton = NSTouchBarItem.Identifier(
         rawValue: "\(Bundle.main.bundleIdentifier!).TouchBarItem.controlStripButton"
     )
 }
 
-@available(OSX 10.12.2, *)
 class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     
     // MARK: App delegate getter
     
-    let delegate = NSApplication.shared().delegate as? AppDelegate
+    let delegate = NSApplication.shared.delegate as? AppDelegate
     
     // MARK: Helpers
 
@@ -136,7 +135,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     
     // MARK: Actions
     
-    func controlsSegmentedViewClicked(_ sender: NSSegmentedControl) {
+    @objc func controlsSegmentedViewClicked(_ sender: NSSegmentedControl) {
         switch sender.selectedSegment {
         case 0:
             helper.previousTrack()
@@ -149,7 +148,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         }
     }
     
-    func shuffleRepeatSegmentedViewClicked(_ sender: NSSegmentedControl) {
+    @objc func shuffleRepeatSegmentedViewClicked(_ sender: NSSegmentedControl) {
         let selectedSegment = sender.selectedSegment
         
         switch selectedSegment {
@@ -164,7 +163,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         }
     }
     
-    func shuffleButtonClicked(_ sender: Any) {
+    @objc func shuffleButtonClicked(_ sender: Any) {
         switch sender {
         case let segmented as NSSegmentedControl:
             helper.shuffling = segmented.isSelected(forSegment: segmented.selectedSegment)
@@ -175,7 +174,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         }
     }
     
-    func repeatButtonClicked(_ sender: Any) {
+    @objc func repeatButtonClicked(_ sender: Any) {
         switch sender {
         case let segmented as NSSegmentedControl:
             helper.repeating = segmented.isSelected(forSegment: segmented.selectedSegment)
@@ -193,12 +192,12 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         updateSoundPopoverButton(for: helper.volume)
     }
     
-    func songArtworkTitleButtonClicked(_ sender: NSButton) {
+    @objc func songArtworkTitleButtonClicked(_ sender: NSButton) {
         // Jump to player when the artwork on the TouchBar is tapped
         showPlayer()
     }
     
-    func likeButtonClicked(_ sender: NSButton) {
+    @objc func likeButtonClicked(_ sender: NSButton) {
         // Reverse like on current track if supported
         if var helper = helper as? LikablePlayerHelper {
             helper.toggleLiked()
@@ -256,7 +255,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     
     func initKeyDownHandler() {
         eventMonitor = NSEvent.addLocalMonitorForEvents(
-            matching: NSEventMask.keyDown,
+            matching: NSEvent.EventTypeMask.keyDown,
             handler: { event in
                 if self.handleKeyDown(with: event) { return nil }
                 
@@ -277,13 +276,13 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         if let _ = window?.firstResponder as? NSTextView { return false }
         
         switch KeyCombination(event.modifierFlags, event.keyCode) {
-        case KeyCombination(.command, kVK_ANSI_S):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_S):
             setPlayerHelper(to: .spotify)
             return true
-        case KeyCombination(.command, kVK_ANSI_I):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_I):
             setPlayerHelper(to: .itunes)
             return true
-        case KeyCombination(.command, kVK_ANSI_V):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_V):
             setPlayerHelper(to: .vox)
             return true
         case kVK_Escape:
@@ -332,7 +331,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     func registerHotkey() {
         guard let hotkeyCenter = DDHotKeyCenter.shared() else { return }
         
-        let modifiers: UInt = NSEventModifierFlags.control.rawValue | NSEventModifierFlags.command.rawValue
+        let modifiers: UInt = NSEvent.ModifierFlags.control.rawValue | NSEvent.ModifierFlags.command.rawValue
         
         // Register system-wide summon hotkey
         hotkeyCenter.registerHotKey(withKeyCode: UInt16(kVK_ANSI_S),
@@ -342,7 +341,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
                                     object: nil)
     }
     
-    func hotkeyAction() {
+    @objc func hotkeyAction() {
         if let window = self.window {
             if didPresentAsSystemModal {
                 // Dismiss system modal bar before opening the window
@@ -360,7 +359,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
             )[0]
         
         // Takes to the player window
-        player.activate(options: .activateIgnoringOtherApps)
+        player.activate(options: NSApplication.ActivationOptions.activateIgnoringOtherApps)
     }
     
     // MARK: Player loading
@@ -489,7 +488,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         
         controlStripButton?.textColor     = NSColor.white.withAlphaComponent(0.8)
         controlStripButton?.font          = NSFont.monospacedDigitSystemFont(ofSize: 16.0,
-                                                                             weight: NSFontWeightRegular)
+                                                                             weight: NSFont.Weight.regular)
         controlStripButton?.imagePosition = .imageOverlaps
         controlStripButton?.isBordered    = false
         controlStripButton?.imageScaling  = .scaleNone
@@ -517,7 +516,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         recognizer.action = #selector(controlStripButtonPressureGestureHandler(_:))
         
         recognizer.minimumPressDuration = 0.25
-        recognizer.allowedTouchTypes    = .direct  // Very important
+        recognizer.allowedTouchTypes    = NSTouch.TouchTypeMask.direct  // Very important
         
         return recognizer
     }
@@ -532,12 +531,12 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         recognizer.target = self
         recognizer.action = #selector(controlStripButtonPanGestureHandler(_:))
         
-        recognizer.allowedTouchTypes = .direct
+        recognizer.allowedTouchTypes = NSTouch.TouchTypeMask.direct
         
         return recognizer
     }
     
-    func controlStripButtonPressureGestureHandler(_ sender: NSGestureRecognizer?) {
+    @objc func controlStripButtonPressureGestureHandler(_ sender: NSGestureRecognizer?) {
         guard let recognizer = sender else { return }
         
         switch recognizer.state {
@@ -553,7 +552,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         }
     }
     
-    func controlStripButtonPanGestureHandler(_ sender: NSGestureRecognizer?) {
+    @objc func controlStripButtonPanGestureHandler(_ sender: NSGestureRecognizer?) {
         guard let recognizer = sender as? NSPanGestureRecognizer else { return }
         
         switch recognizer.state {
@@ -579,7 +578,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     /**
      Reveals the designated NSTouchBar when control strip button is pressed
      */
-    func presentModalTouchBar() {
+    @objc func presentModalTouchBar() {
         updatePopoverButtonForControlStrip()
         
         touchBar?.presentAsSystemModal(for: controlStripItem)
@@ -683,16 +682,16 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     func prepareWindow() {
         guard let window = self.window else { return }
         
-        window.titleVisibility = NSWindowTitleVisibility.hidden;
+        window.titleVisibility = NSWindow.TitleVisibility.hidden;
         window.titlebarAppearsTransparent = true
-        window.styleMask.update(with: NSWindowStyleMask.fullSizeContentView)
+        window.styleMask.update(with: NSWindow.StyleMask.fullSizeContentView)
         
         // Set fixed window position (at the center of the screen)
         window.center()
         window.isMovable = false
         
         // Show on every workspace
-        window.collectionBehavior = .transient
+        window.collectionBehavior = NSWindow.CollectionBehavior.transient
         
         // Hide after losing focus
         window.hidesOnDeactivate = true
@@ -774,12 +773,12 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         recognizer.target = self
         recognizer.action = #selector(songArtworkTitleButtonPanGestureHandler(_:))
         
-        recognizer.allowedTouchTypes = .direct
+        recognizer.allowedTouchTypes = NSTouch.TouchTypeMask.direct
         
         return recognizer
     }
     
-    func songArtworkTitleButtonPanGestureHandler(_ recognizer: NSPanGestureRecognizer) {
+    @objc func songArtworkTitleButtonPanGestureHandler(_ recognizer: NSPanGestureRecognizer) {
         if case .began = recognizer.state {
             songArtworkTitleButton?.title =
                 recognizer.translation(in: songArtworkTitleButton).x > 0 ?
@@ -796,7 +795,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         
         soundSlider?.minimumValueAccessory = NSSliderAccessory(image: NSImage.volumeLow!)
         soundSlider?.maximumValueAccessory = NSSliderAccessory(image: NSImage.volumeHigh!)
-        soundSlider?.valueAccessoryWidth   = .wide
+        soundSlider?.valueAccessoryWidth   = NSSliderAccessory.Width.wide
         
         // Set the player volume on the slider
         soundSlider?.slider.integerValue = helper.volume
@@ -843,7 +842,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     /**
      Catches URLs with specific prefix ("muse://")
      */
-    func handleURLEvent(event: NSAppleEventDescriptor,
+    @objc func handleURLEvent(event: NSAppleEventDescriptor,
                         replyEvent: NSAppleEventDescriptor) {
         if  let urlDescriptor = event.paramDescriptor(forKeyword: keyDirectObject),
             let urlString     = urlDescriptor.stringValue,
@@ -871,7 +870,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
     
     func initWakeNotificationWatcher() {
         // Attach the NotificationObserver for system wake notification
-        NSWorkspace.shared().notificationCenter.addObserver(forName: .NSWorkspaceDidWake,
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification,
                                                             object: nil,
                                                             queue: nil,
                                                             using: hookWakeNotification)
@@ -1081,7 +1080,7 @@ class WindowController: NSWindowController, NSWindowDelegate, SliderDelegate {
         }
     }
     
-    func syncSongProgressSlider() {
+    @objc func syncSongProgressSlider() {
         guard helper.playerState != .stopped else {
             // Reset song data if player is stopped
             resetSong()

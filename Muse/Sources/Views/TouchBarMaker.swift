@@ -8,25 +8,24 @@
 
 import Cocoa
 
-fileprivate extension NSTouchBarCustomizationIdentifier {
-    static let windowBar  = NSTouchBarCustomizationIdentifier("\(Bundle.main.bundleIdentifier!).windowBar")
-    static let popoverBar = NSTouchBarCustomizationIdentifier("\(Bundle.main.bundleIdentifier!).popoverBar")
+ fileprivate extension NSTouchBar.CustomizationIdentifier {
+    static let windowBar  = "\(Bundle.main.bundleIdentifier!).windowBar"
+    static let popoverBar = "\(Bundle.main.bundleIdentifier!).popoverBar"
 }
 
-fileprivate extension NSTouchBarItemIdentifier {
+ fileprivate extension NSTouchBarItem.Identifier {
     // Main TouchBar identifiers
-    static let songArtworkTitleButton     = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.songArtworkTitle")
-    static let songProgressSlider         = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.songProgressSlider")
-    static let controlsSegmentedView       = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.controlsSegmentedView")
-    static let likeButton                 = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.likeButton")
-    static let soundPopoverButton         = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.soundPopoverButton")
+    static let songArtworkTitleButton     = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.songArtworkTitle")
+    static let songProgressSlider         = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.songProgressSlider")
+    static let controlsSegmentedView       = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.controlsSegmentedView")
+    static let likeButton                 = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.likeButton")
+    static let soundPopoverButton         = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.soundPopoverButton")
     
     // Popover TouchBar identifiers
-    static let soundSlider                = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.soundSlider")
-    static let shuffleRepeatSegmentedView = NSTouchBarItemIdentifier("\(Bundle.main.bundleIdentifier!).touchBar.shuffleRepeatSegmentedView")
+    static let soundSlider                = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.soundSlider")
+    static let shuffleRepeatSegmentedView = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).touchBar.shuffleRepeatSegmentedView")
 }
 
-@available(OSX 10.12.2, *)
 extension WindowController: NSTouchBarDelegate {
     
     /**
@@ -71,7 +70,7 @@ extension WindowController: NSTouchBarDelegate {
                 generated for window bar or popover bar
       */
     func touchBar(_ touchBar: NSTouchBar,
-                  makeItemForIdentifier identifier: NSTouchBarItemIdentifier) -> NSTouchBarItem? {
+                  makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         guard let barIdentifier = touchBar.customizationIdentifier else { return nil }
         
         switch barIdentifier {
@@ -89,7 +88,7 @@ extension WindowController: NSTouchBarDelegate {
      - parameter identifier: the identifier of the requested item
      - returns: the requested NSTouchBarItem
       */
-    func touchBarItem(for identifier: NSTouchBarItemIdentifier) -> NSTouchBarItem? {
+    func touchBarItem(for identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         switch identifier {
         case .songArtworkTitleButton:
             return createItem(identifier: identifier, view: songArtworkTitleButton) { item in
@@ -130,7 +129,7 @@ extension WindowController: NSTouchBarDelegate {
      - parameter identifier: the identifier of the requested item
      - returns: the requested NSTouchBarItem
       */
-    func popoverBarItem(for identifier: NSTouchBarItemIdentifier) -> NSTouchBarItem? {
+    func popoverBarItem(for identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
         switch identifier {
         case .soundSlider:
             return createItem(identifier: identifier) { item in
@@ -157,7 +156,7 @@ extension WindowController: NSTouchBarDelegate {
         popoverButton?.action = #selector(openPopoverBar(_:))
     }
     
-    func openPopoverBar(_ sender: NSButton) {
+    @objc func openPopoverBar(_ sender: NSButton) {
         popoverBar?.presentAsSystemModal(forItemIdentifier: .soundPopoverButton)
     }
     
@@ -168,7 +167,7 @@ extension WindowController: NSTouchBarDelegate {
      - parameter creationHandler: the handler to execute when the item has been created
      - returns: the requested NSTouchBarItem
       */
-    public func createItem(identifier: NSTouchBarItemIdentifier,
+    public func createItem(identifier: NSTouchBarItem.Identifier,
                            view: NSView? = nil,
                            creationHandler: (NSTouchBarItem) -> ()) -> NSTouchBarItem {
         var item: NSTouchBarItem = NSCustomTouchBarItem(identifier: identifier)
@@ -251,7 +250,7 @@ extension WindowController: NSTouchBarDelegate {
  
 extension NSView {
     
-    func widthConstraint(relation: NSLayoutRelation,
+    func widthConstraint(relation: NSLayoutConstraint.Relation,
                          size: CGFloat) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: self,
                                   attribute: .width,
@@ -262,7 +261,7 @@ extension NSView {
                                   constant: size)
     }
     
-    func addWidthConstraint(relation: NSLayoutRelation = .equal,
+    func addWidthConstraint(relation: NSLayoutConstraint.Relation = .equal,
                             size: CGFloat) {
         addConstraint(widthConstraint(relation: relation,
                                       size: size))
@@ -270,7 +269,7 @@ extension NSView {
     
 }
  
-extension NSCellImagePosition {
+extension NSControl.ImagePosition {
     
     var touchBarDefaultSize: CGFloat {
         switch self {

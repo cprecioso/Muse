@@ -11,7 +11,7 @@ import MASPreferences
 
 class GeneralPreferencesViewController: NSViewController, MASPreferencesViewController {
     
-    override var nibName: String? {
+    override var nibName: NSNib.Name? {
         return "GeneralPreferencesView"
     }
     
@@ -21,7 +21,7 @@ class GeneralPreferencesViewController: NSViewController, MASPreferencesViewCont
     
     var toolbarItemLabel: String? = "General"
     
-    var toolbarItemImage: NSImage? = NSImage(named: NSImageNamePreferencesGeneral)
+    var toolbarItemImage: NSImage? = NSImage(named: NSImage.preferencesGeneralName)
     
     // MARK: General preferences
     

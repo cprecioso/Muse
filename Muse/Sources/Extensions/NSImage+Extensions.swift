@@ -6,7 +6,6 @@
 //  Copyright © 2016 Edge Apps. All rights reserved.
 //
 
-@available(OSX 10.12.2, *)
 extension NSImage {
     
     // MARK: Project drawables
@@ -20,16 +19,16 @@ extension NSImage {
     static let like         = NSImage(named: "DFRLike")!.forUI()
     static let liked        = NSImage(named: "DFRLiked")
     
-    static let previous     = NSImage(named: NSImageNameTouchBarRewindTemplate)!
-    static let next         = NSImage(named: NSImageNameTouchBarFastForwardTemplate)!
-    static let play         = NSImage(named: NSImageNameTouchBarPlayTemplate)!
-    static let pause        = NSImage(named: NSImageNameTouchBarPauseTemplate)!
+    static let previous     = NSImage(named: NSImage.touchBarRewindTemplateName)!
+    static let next         = NSImage(named: NSImage.touchBarFastForwardTemplateName)!
+    static let play         = NSImage(named: NSImage.touchBarPlayTemplateName)!
+    static let pause        = NSImage(named: NSImage.touchBarPauseTemplateName)!
     
-    static let volumeLow    = NSImage(named: NSImageNameTouchBarAudioOutputVolumeLowTemplate)
-    static let volumeMedium = NSImage(named: NSImageNameTouchBarAudioOutputVolumeMediumTemplate)
-    static let volumeHigh   = NSImage(named: NSImageNameTouchBarAudioOutputVolumeHighTemplate)
+    static let volumeLow    = NSImage(named: NSImage.touchBarAudioOutputVolumeLowTemplateName)
+    static let volumeMedium = NSImage(named: NSImage.touchBarAudioOutputVolumeMediumTemplateName)
+    static let volumeHigh   = NSImage(named: NSImage.touchBarAudioOutputVolumeHighTemplateName)
     
-    static let playhead     = NSImage(named: NSImageNameTouchBarPlayheadTemplate)
+    static let playhead     = NSImage(named: NSImage.touchBarPlayheadTemplateName)
     static let playbar      = NSImage(named: "playbar")
     
 }
@@ -120,7 +119,7 @@ extension NSImage {
         let image = NSImage(size: size)
         image.lockFocus()
         
-        NSGraphicsContext.current()?.imageInterpolation = .high
+        NSGraphicsContext.current?.imageInterpolation = .high
         let frame = NSRect(origin: .zero, size: size)
         NSBezierPath(ovalIn: frame).addClip()
         draw(at: .zero, from: frame, operation: .sourceOver, fraction: 1)

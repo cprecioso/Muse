@@ -6,7 +6,6 @@
 //  Copyright © 2017 Edge Apps. All rights reserved.
 //
 
-@available(OSX 10.12.2, *)
 extension NSTouch {
     
     // MARK: Extended functions

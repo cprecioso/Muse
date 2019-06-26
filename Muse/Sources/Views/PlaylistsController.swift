@@ -10,7 +10,6 @@ import Cocoa
 
 // MARK: NSTableViewDelegate
 
-@available(OSX 10.12.2, *)
 extension ViewController {
     
     /**
@@ -22,7 +21,7 @@ extension ViewController {
                    row: Int) -> NSView? {
         guard let identifier = tableColumn?.identifier else { return nil }
         
-        if let cell = tableView.make(withIdentifier: identifier, owner: self) as? ResultsTableCellView {
+        if let cell = tableView.makeView(withIdentifier: identifier, owner: self) as? ResultsTableCellView {
             // First table cell field: playlist name
             cell.textField?.stringValue = playlistsResults[row].name
             cell.textField?.textColor   = colors?.primary
@@ -54,7 +53,6 @@ extension ViewController {
 
 // MARK: NSTableViewDataSource
 
-@available(OSX 10.12.2, *)
 extension ViewController {
     
     func playlistsNumberOfRows(in tableView: NSTableView) -> Int {
@@ -64,7 +62,6 @@ extension ViewController {
 
 // MARK: Playlist related functions
 
-@available(OSX 10.12.2, *)
 extension ViewController {
     
     func searchPlaylist(_ text: String) {

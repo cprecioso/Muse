@@ -11,7 +11,6 @@ import QuartzCore
 import Carbon.HIToolbox
 import SpotifyKit
 
-@available(OSX 10.12.2, *)
 fileprivate extension NSButton {
     
     static var playerActions: [PlayerAction: Selector] { return
@@ -176,7 +175,6 @@ enum MainViewMode {
     }
 }
 
-@available(OSX 10.12.2, *)
 class ViewController: NSViewController, NSTextFieldDelegate {
     
     // MARK: Properties
@@ -314,7 +312,7 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     @IBAction func songProgressSliderValueChanged(_ sender: Any) {
         // Track progress slider changes
         if let slider = sender as? NSSlider {
-            guard let currentEvent = NSApplication.shared().currentEvent else { return }
+            guard let currentEvent = NSApplication.shared.currentEvent else { return }
             
             if currentEvent.type == .leftMouseDragged {
                 // Detected mouse down
@@ -328,11 +326,11 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         }
     }
     
-    func goToNextActionTab() {
+    @objc func goToNextActionTab() {
         actionTabView.selectNextTabViewItem(self)
     }
     
-    func goToPreviousActionTab() {
+    @objc func goToPreviousActionTab() {
         actionTabView.selectPreviousTabViewItem(self)
     }
     
@@ -348,17 +346,17 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         if let _ = view.window?.firstResponder as? NSTextView { return }
         
         switch KeyCombination(event.modifierFlags, event.keyCode) {
-        case KeyCombination(.command, kVK_ANSI_1):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_1):
             goToActionTab(at: 0)
-        case KeyCombination(.command, kVK_ANSI_2):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_2):
             goToActionTab(at: 1)
         case kVK_ANSI_I:
             showTitleView()
         case kVK_ANSI_B:
             shouldShowActionBar = !shouldShowActionBar
-        case KeyCombination(.command, kVK_ANSI_F):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_F):
             startTrackSearch()
-        case KeyCombination(.command, kVK_ANSI_P):
+        case KeyCombination(NSEvent.ModifierFlags.command, kVK_ANSI_P):
             startPlaylistsSearch()
         default: break
         }
@@ -421,7 +419,7 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     func registerKeyDown() {
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+        NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.keyDown) { event in
             self.keyDown(with: event)
             return event
         }
@@ -924,7 +922,7 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     
     // MARK: NSTextFieldDelegate
     
-    override func controlTextDidChange(_ obj: Notification) {
+    func controlTextDidChange(_ obj: Notification) {
         if let field = obj.object as? NSTextField {
             search(field.stringValue)
         }

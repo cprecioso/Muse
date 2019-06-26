@@ -24,7 +24,6 @@ enum PlayerEvent {
     case like(Bool)
 }
 
-@available(OSX 10.12.2, *)
 extension PlayerEvent {
     
     var image: NSImage? {

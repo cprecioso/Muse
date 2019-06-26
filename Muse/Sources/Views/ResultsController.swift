@@ -50,7 +50,6 @@ extension NSTableView {
     }
 }
 
-@available(OSX 10.12.2, *)
 extension ViewController: NSTableViewDelegate {
     
     /**
@@ -78,7 +77,7 @@ extension ViewController: NSTableViewDelegate {
     /**
      Double click action, set as tableView.doubleAction
      */
-    func tableViewDoubleClicked(tableView: NSTableView) {
+    @objc func tableViewDoubleClicked(tableView: NSTableView) {
         switch resultsMode {
         case .trackSearch:
             searchTableViewDoubleClicked(tableView: tableView)
@@ -110,7 +109,6 @@ extension ViewController: NSTableViewDelegate {
     }
 }
 
-@available(OSX 10.12.2, *)
 extension ViewController: NSTableViewDataSource {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -123,7 +121,6 @@ extension ViewController: NSTableViewDataSource {
     }
 }
 
-@available(OSX 10.12.2, *)
 extension ViewController {
     
     /**
@@ -139,7 +136,7 @@ extension ViewController {
         }
     }
     
-    func startSearch() {
+    @objc func startSearch() {
         // Enable editing and empty the field
         titleTextField.isEditable  = true
         titleTextField.isEnabled   = true

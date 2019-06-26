@@ -8,11 +8,11 @@
 
 import Cocoa
 
-extension NSTrackingAreaOptions {
+extension NSTrackingArea.Options {
     
     // An OptionSet with the needed mouse tracking flags
-    static var defaultMouse: NSTrackingAreaOptions {
-        return [.mouseEnteredAndExited, .activeAlways]
+    static var defaultMouse: NSTrackingArea.Options {
+        return [NSTrackingArea.Options.mouseEnteredAndExited, NSTrackingArea.Options.activeAlways]
     }
 }
 
@@ -112,7 +112,7 @@ class NSHoverableView: NSView, NSMouseHoverableView, NSMouseScrollableView {
     var onMouseScrollEvent: ((NSScrollEvent) -> ())?
     
     override func scrollWheel(with event: NSEvent) {
-        if event.phase.contains(.began) {
+        if event.phase.contains(NSEvent.Phase.began) {
             onMouseScrollEvent?(NSScrollEvent(initialEvent: event))
         }
     }

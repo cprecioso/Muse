@@ -38,7 +38,7 @@ extension CALayer {
         
         // Also to avoid flickering
         animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = CAMediaTimingFillMode.forwards
         
         self.add(animation, forKey: key)
         
